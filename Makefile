@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
-# $Id: Makefile 198 1998-05-23 17:38:53Z ohl $
+# $Id: Makefile,v 1.27 1996/12/02 09:20:35 ohl Exp $
 #
 ########################################################################
 
@@ -41,14 +41,11 @@ INSTALL_DATA = install -c -m 644
 
 # This has to be the new LaTeX
 LATEX = latex
-# This used to be the old LaTeX, but I don't have
-# a full installation (incl. doc.sty) anymore.
-# Therefore I only test compatibility mode.
-# LATEX209 = tex '&latex209'
-LATEX209 = $(LATEX)
+# This should be the old LaTeX
+LATEX209 = tex '&latex209'
 # This must not have the cmbase preloaded:
 MF = mf
-MP = mpost
+MP = mp
 MAKEINDEX = makeindex
 
 # Your local printer mode

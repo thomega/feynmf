@@ -1,6 +1,6 @@
 % \iffalse % feynmf.dtx - Feynman diagrams with METAFONT for LaTeX(2e)
-% Copyright (C) 1989, 1990, 1992-1997 by Thorsten.Ohl@Physik.TH-Darmstadt.de
-% $Id: feynmf.dtx 197 1997-06-14 23:35:51Z ohl $
+% Copyright (C) 1989, 1990, 1992-1996 by Thorsten.Ohl@Physik.TH-Darmstadt.de
+% $Id: feynmf.dtx,v 1.30 1996/12/02 09:20:36 ohl Exp $
 %
 % Feynmf is free software; you can redistribute it and/or modify it
 % under the terms of the GNU General Public License as published by 
@@ -20,7 +20,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%% \CheckSum{928}
+%% \CheckSum{924}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -120,8 +120,7 @@
 % do not address the issue of graphical information, apart from the
 % rudimentary (but very useful) capabilities of the \LaTeX{} |picture|
 % environment and similar
-% packages~\cite{LaTeX-Companion,LaTeX-Graphics-Companion}.  As an de
-% facto standard for the
+% packages~\cite{LaTeX-Companion}.  As an de facto standard for the
 % inclusion of more complex graphics has emerged the inclusion of
 % PostScript\footnote{PostScript is a trademark of Adobe Systems
 %   Inc.} 
@@ -316,8 +315,7 @@
 %
 % In addition to this manual, there exists also a concise description
 % of \FMF{} in a journal article~\cite{CPC}, as well as a three part
-% tutorial~\cite{CNL}.  A third-party description is available
-% in~\cite{LaTeX-Graphics-Companion}.
+% tutorial~\cite{CNL}. 
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{\LaTeX{} package and environments}
@@ -342,10 +340,7 @@
 %   and the \LaTeX~2.09 compatibility version will always be a
 %   retrofitted hack.  I will accept bug reports for the 2.09 version,
 %   but I urge everybody to move to \LaTeX2e, which is the one and
-%   only supported \LaTeX{} right now.  As I don't have a full native
-%   \LaTeX~2.09 installation anymore (e.g.~\texttt{doc.sty} is
-%   missing), I do \emph{no longer} promise to test the 2.09 version
-%   before making a new release.}
+%   only supported \LaTeX{} right now.}
 % \begin{quote}
 %   |\usepackage{feynmf}|
 % \end{quote}
@@ -665,7 +660,7 @@
 % \end{description}
 % 
 % \subsubsection*{AUTHOR}
-% Thorsten Ohl \texttt{<Thorsten.Ohl@Physik.TH-Darmstadt.de>}
+% Thorsten Ohl $<$Thorsten.Ohl@Physik.TH-Darmstadt.de$>$
 % 
 % \subsubsection*{BUGS}
 % The preparation of {\tt .tfm} files is not foolproof yet, because we can
@@ -3095,12 +3090,9 @@
 %   \bibitem{LaTeX} Leslie Lamport, \textit{\LaTeX{} --- A
 %     Documentation Preparation System},
 %     Addison-Wesley, Reading MA, 1985.
-%   \bibitem{LaTeX-Companion} Michel Goossens, Frank Mittelbach, and
+%   \bibitem{LaTeX-Companion} Michel Goosens, Frank Mittelbach, and
 %     Alexander Samarin, \textit{The \LaTeX{} Companion},
 %     Addison-Wesley, Reading MA, 1994.
-%   \bibitem{LaTeX-Graphics-Companion} Michel Goossens, Sebastian
-%     Rahtz, and Frank Mittelbach, \textit{The \LaTeX{} Graphics
-%     Companion}, Addison-Wesley, Reading MA, 1997.
 %   \bibitem{MF} Donald E.~Knuth, \textit{The \MF{}book},
 %      Addison-Wesley, Reading MA, 1986.
 %   \bibitem{MetaPost} John D.~Hobby, \textit{A User's Manual for
@@ -3117,6 +3109,7 @@
 %     Comp.~Phys.~Comm.~\textbf{83} (1994) 45.
 %     \texttt{axodraw} is available from CTAN
 %     (cf.~p.~\pageref{pg:CTAN}), in the  \texttt{graphics} directory.
+%     ^^A Comp.~Phys.~Comm.~\textbf{??} (1995) ???.
 %   \bibitem{mfpic} Thomas E.~Leathrum, \texttt{mfpic}, available from
 %     CTAN (cf.~p.~\pageref{pg:CTAN}), in the \texttt{graphics}
 %     directory.
@@ -3125,7 +3118,7 @@
 %   \bibitem{Kil94} Wolfgang Kilian, Doctoral Thesis, Technical
 %     University Darmstadt, 1994.
 %   \bibitem{Lambda} Alan Jeffrey, \textit{Lists in \TeX's Mouth},
-%     TUGboat \textbf{11} (1990).
+%     TUGboat 199?.
 % \end{thebibliography}
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3212,7 +3205,7 @@
    \gdef\filerevision{#3}%
    \gdef\filedate{#4}%
    \gdef\filemaintainer{#6}}%
-\RCS $Id: feynmf.dtx 197 1997-06-14 23:35:51Z ohl $ \endRCS}%
+\RCS $Id: feynmf.dtx,v 1.30 1996/12/02 09:20:36 ohl Exp $ \endRCS}%
 %    \end{macrocode}
 %
 % And now the standard procedure:
@@ -3538,7 +3531,7 @@
 % \changes{v0.8}{1995/01/07}{Don't use \texttt{\protect\bslash stepcounter}.}
 % \changes{v0.99}{1995/05/04}{Use \texttt{\protect\bslash fmfsubgraph}.}
 %    \begin{macrocode}
-  \global\advance\c@fmfgraph\@ne
+  \global\expandafter\advance\csname c@fmfgraph\endcsname \@ne
 %    \end{macrocode}
 % Start \MF{} character:\footnote{%
 %   I'm flying a bit blind here, because I can't figure out why Babel
@@ -3735,22 +3728,15 @@
    {\typeout{%
       feynmf: \string\fmfreuse: %
       missing \string\fmfkeep\space for `#1'!}}%
-   {{\edef\thefmffile{\@nameuse{fmf@k:f:#1}}%
+   {\edef\thefmffile{\@nameuse{fmf@k:f:#1}}%
 %<*!mp>
-     \expandafter\let\expandafter\f@ynmf%
-       \csname f@ynmf:\thefmffile\endcsname
+    \expandafter\let\expandafter\f@ynmf%
+      \csname f@ynmf:\thefmffile\endcsname
 %</!mp>
-%    \end{macrocode}
-% Gotta stash the curent counter value in a safe place, because
-% |\fmf@graph| will increment it globally. 
-% \changes{v1.09}{1997/06/14}{Make redefinitions local (stupid bug!).}
-%    \begin{macrocode}
-     \edef\@@@c@fmfgraph{\thefmfgraph}%
-     \setcounter{fmfgraph}{\@nameuse{fmf@k:c:#1}}%
-     \advance\c@fmfgraph-1%
-     \def\fmfcmd##1{\ignorespaces}%
-     \@nameuse{fmf@k:e:#1}%
-     \setcounter{fmfgraph}{\@@@c@fmfgraph}}}}
+    \@nameuse{c@fmfgraph}\@nameuse{fmf@k:c:#1}%
+    \advance\@nameuse{c@fmfgraph}-1%
+    \def\fmfcmd##1{}%
+    \@nameuse{fmf@k:e:#1}}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -4066,7 +4052,7 @@ vardef require_RCS_revision expr s =
   save n, TeX_rev, mf_rev;
   numeric n;
   parse_RCS (TeX_rev, s);
-  parse_RCS (mf_rev, "$Revision: 197 $");
+  parse_RCS (mf_rev, "$Revision: 1.30 $");
   for n = 1 upto min (2, TeX_rev[0], mf_rev[0]):
     if TeX_rev[n] > mf_rev[n]:
       errhelp

@@ -1,7 +1,7 @@
 #! /usr/bin/perl
 # feynmf.pl -- FeynMF driver for UNIX systems
 # Copyright (C) 1996 by Thorsten.Ohl@Physik.TH-Darmstadt.de
-# $Id: feynmf.pl 191 1996-12-02 01:38:45Z ohl $
+# $Id: feynmf.pl,v 1.5 1996/12/02 01:38:45 ohl Exp $
 #
 # Feynmf is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by 
@@ -373,7 +373,7 @@ sub run_mf {
 			maybe_run "$gftopk_prog $gf" if $gftopk_prog;
 		    }
 		}
-		close (<LOG>);
+		close (LOG);
 	    }
 	}
     }
@@ -427,7 +427,7 @@ OPTIONS:
 __HELP__
 
 die "$usage" unless &GetOptions(@options);
-die 'This is feynmf: $Id: feynmf.pl 191 1996-12-02 01:38:45Z ohl $'
+die 'This is feynmf: $Id: feynmf.pl,v 1.5 1996/12/02 01:38:45 ohl Exp $'
    . "\n" if $opt_version;
 die $help if $opt_help;
 die "$usage" unless $ARGV[0];

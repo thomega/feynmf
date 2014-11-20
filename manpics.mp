@@ -1,6 +1,6 @@
 % manpics.mp -- pictures for the feynmf manual
 % Copyright (C) 1995 by Thorsten.Ohl @ Physik.TH-Darmstadt.de
-% $Id: manpics.mp 188 1996-10-08 20:22:02Z ohl $
+% $Id: manpics.mp,v 1.5 1996/10/08 20:22:02 ohl Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Feynmf is free software; you can redistribute it and/or modify it
