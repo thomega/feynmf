@@ -1,0 +1,21 @@
+\documentstyle[12pt]{article}
+\font\logo=logo10\font\manfnt=manfnt
+\def\MF{{\logo MF}}
+\begin{document}
+\begin{figure}
+  \begin{center}
+  \input{flow.latex}
+  \caption{Flow of information in a {\tt feynmf} application:  The
+     first \LaTeX{} pass is shown with a dashed line.  The \MF{}
+     pass is shown with the full lines and the second \LaTeX{} pass
+     with dotted lines.  The final dvi translation step is shown with
+     thin lines.}
+  \end{center}
+\end{figure}
+\begin{figure}
+  \begin{center}
+  \input{flowp.latex}
+  \caption{Flow of information in a {\tt feynmf} application.}
+  \end{center}
+\end{figure}
+\end{document}

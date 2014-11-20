@@ -1,0 +1,676 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<!-- sgml "iso 8879:1986" -->
+<HEAD>
+<STYLE>
+A:link { color : #E50000 }
+A:visited { color : #0000E5 }
+</STYLE>
+<TITLE>FeynMF Reference Manual</TITLE>
+</HEAD>
+<BODY bgcolor="#D0D0D0" text="#000000" link="#D00000" vlink="#0000D0">
+<!--$Header$-->
+<H1 align=center><CODE>FeynMF</CODE> Reference Manual</H1>
+
+<H2 align=center>Files and Diagrams</H2>
+
+<DL>
+<DT><A name="fmffile"><CODE>\begin{fmffile}{<VAR>file</VAR>} <VAR>LaTeX
+code</VAR> \end{fmffile}</CODE></A></DT>
+<DD>Write all diagrams in <VAR>LaTeX code</VAR> into the file <VAR>file</VAR>.
+</DD>
+<DT><A
+name="fmfgraph*"><CODE>\begin{fmfgraph*}(<VAR>width</VAR>,<VAR>height</VAR>)
+<VAR>FeynMF commands</VAR> \end{fmfgraph*}</CODE></A></DT>
+<DD>Construct a Feynman diagram of a given <VAR>width</VAR> and
+<VAR>height</VAR> (measured in units of <CODE>\unitlength</CODE>), specified
+by the <VAR>FeynMF commands</VAR>.
+</DD>
+<DT><A
+name="fmfgraph"><CODE>\begin{fmfgraph}(<VAR>width</VAR>,<VAR>height</VAR>)
+<VAR>FeynMF commands</VAR> \end{fmfgraph}</CODE></A></DT>
+<DD>A slightly more efficient version of <A
+href="#fmfgraph*"><CODE>fmfgraph*</CODE></A>, which does not support labels
+for vertices and arcs.
+</DD>
+<DT><A
+name="fmfframe"><CODE>\fmfframe(<VAR>left</VAR>,<VAR>top</VAR>)(<VAR>right</VAR>,<VAR>bottom</VAR>){<VAR>box</VAR>}</CODE></A></DT>
+<DD>Put an (invisible) frame around <VAR>box</VAR>.  The size of the frame is
+given by the dimensions <VAR>left</VAR>, <VAR>top</VAR>, <VAR>right</VAR> and
+<VAR>bottom</VAR>. This is useful if labels are overshooting the box defined
+by the <A href="#fmfgraph*"><CODE>fmfgraph*</CODE></A> environment.
+</DD>
+</DL>
+<H2 align=center>Graph Mode</H2>
+
+<DL>
+<DT><A
+name="fmf"><CODE>\fmf{<VAR>style</VAR>}{<VAR>v1,v2[,...]</VAR>}</CODE></A></DT>
+<DD>Connect the vertices <VAR>v1,v2[,...]</VAR> with propagators of style
+<VAR>style</VAR>. See the <A href="#styles">table</A> below for the <A
+href="#styles">supported line styles</A>.
+</DD>
+<DT><A
+name="fmfn"><CODE>\fmfn{<VAR>style</VAR>}{<VAR>v</VAR>}{<VAR>n</VAR>}</CODE></A></DT>
+<DD>Connect the vertices <VAR>v1,v2,...,vn</VAR> with propagators of style
+<VAR>style</VAR>. See the <A href="#styles">table</A> below for the <A
+href="#styles">supported line styles</A>.
+</DD>
+<DT><A
+name="fmfcyclen"><CODE>\fmfcyclen{<VAR>style</VAR>}{v}{n}</CODE></A></DT>
+<DD>Connect the vertices <VAR>v1,v2,...,vn</VAR> cyclically with propagators
+of style <VAR>style</VAR>. See the <A href="#styles">table</A> below for the
+<A href="#styles">supported line styles</A>.
+</DD>
+<DT><A
+name="fmfrcyclen"><CODE>\fmfrcyclen{<VAR>style</VAR>}{<VAR>v</VAR>}{n}</CODE></A></DT>
+<DD>Connect the vertices <VAR>vn,...,v2,v1</VAR> cyclically with propagators
+of style <VAR>style</VAR>. See the <A href="#styles">table</A> below for the
+<A href="#styles">supported line styles</A>.
+</DD>
+<DT><A name="fmflabel"><CODE>\fmflabel{<VAR>label</VAR>}{v}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfv"><CODE>\fmfv{<VAR>style</VAR>}{<VAR>v1[,...]</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfvn"><CODE>\fmfvn{<VAR>style</VAR>}{v}{n}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfdot"><CODE>\fmfdot{<VAR>v1[,...]</VAR>}</CODE></A></DT>
+<DD>Draw a dot at the vertices <CODE><VAR>v1[,...]</VAR></CODE>
+</DD>
+<DT><A
+name="fmfdotn"><CODE>\fmfdotn{<VAR>v</VAR>}{<VAR>n</VAR>}</CODE></A></DT>
+<DD>Draw a dot at the vertices <VAR>v1,v2,...,vn</VAR>.
+</DD>
+<DT><A
+name="fmfblob"><CODE>\fmfblob{<VAR>diam</VAR>}{<VAR>v1[,...]</VAR>}</CODE></A></DT>
+<DD>Draw a blob of diameter <CODE><VAR>diam</VAR></CODE> at the vertices
+<CODE><VAR>v1[,...]</VAR>.</CODE>
+</DD>
+<DT><A
+name="fmfblobn"><CODE>\fmfblobn{<VAR>diam</VAR>}{<VAR>v</VAR>}{<VAR>n</VAR>}</CODE></A></DT>
+<DD>Draw a blob of diameter <VAR>diam</VAR> at the vertices
+<VAR>v1,v2,...,vn</VAR>.
+</DD>
+<DT><A
+name="fmfpoly"><CODE>\fmfpoly{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfpolyn"><CODE>\fmfpolyn{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfrpolyn"><CODE>\fmfrpolyn{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfinit"><CODE>\fmfinit</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmffreeze"><CODE>\fmffreeze</CODE></A></DT>
+<DD>Calculate the positions of the vertices based on the arcs which are
+defined up to this point.  Usually this calculation is performed automatically
+at the end of the <CODE>fmfgraph</CODE> environment. Calling it explicitely is
+useful for later adding arcs that should not enter the calculation .  The
+layout is chosen to minimize the overall length of all arcs.  The length of
+each arc is weighted with the <CODE>tension</CODE> option, whose default value
+is 1.
+</DD>
+<DT><A name="fmfdraw"><CODE>\fmfdraw</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfpen"><CODE>\fmfpen{<VAR>#1</VAR>}</CODE></A></DT>
+<DD>Pick up a pen of the size <CODE><VAR>#1</VAR></CODE>.  This is used for
+changing the weight (i.e. thickness) of the lines. Predefined sizes are <A
+href="#parameters"><CODE>thin</CODE></A> and <A
+href="#parameters"><CODE>thick</CODE></A>.
+</DD>
+<DT><A
+name="fmfset"><CODE>\fmfset{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+</DL>
+
+<DIV align=center>
+<A name="styles"></A>
+<TABLE BORDER=3>
+<CAPTION align=bottom>A list of the currently supported line styles in <A
+href="#fmf"><CODE>\fmf</CODE></A>:</CAPTION>
+  <TR>
+<TH><P>
+Name</P>
+<TH><P>
+Representation</P>
+<TH><P>
+Parameters</P>
+<TH><P>
+Aliases</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>curly</CODE></P>
+<TD><IMG src="curly.gif" alt="[curly.gif]">
+<TD><P>
+<A href="#parameters"><CODE>curly_len</CODE></A></P>
+<TD><P>
+<CODE>gluon</CODE></P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_curly</CODE></P>
+<TD><IMG src="dbl_curly.gif" alt="[dbl_curly.gif]">
+<TD><P>
+<A href="#parameters"><CODE>curly_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dashes</CODE></P>
+<TD><IMG src="dashes.gif" alt="[dashes.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dash_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dashes_arrow</CODE></P>
+<TD><IMG src="dashes_arrow.gif" alt="[dashes_arrow.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dash_len</CODE></A>, <A
+href="#parameters"><CODE>arrow_ang</CODE></A>, <A
+href="#parameters"><CODE>arrow_len</CODE></A></P>
+<TD><P>
+<CODE>scalar</CODE></P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_dashes</CODE></P>
+<TD><IMG src="dbl_dashes.gif" alt="[dbl_dashes.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dash_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_dashes_arrow</CODE></P>
+<TD><IMG src="dbl_dashes_arrow.gif" alt="[dbl_dashes_arrow.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dash_len</CODE></A>, <A
+href="#parameters"><CODE>arrow_ang</CODE></A>, <A
+href="#parameters"><CODE>arrow_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dots</CODE></P>
+<TD><IMG src="dots.gif" alt="[dots.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dot_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dots_arrow</CODE></P>
+<TD><IMG src="dots_arrow.gif" alt="[dots_arrow.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dot_len</CODE></A>, <A
+href="#parameters"><CODE>arrow_ang</CODE></A>, <A
+href="#parameters"><CODE>arrow_len</CODE></A></P>
+<TD><P>
+<CODE>ghost</CODE></P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_dots</CODE></P>
+<TD><IMG src="dbl_dots.gif" alt="[dbl_dots.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dot_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_dots_arrow</CODE></P>
+<TD><IMG src="dbl_dots_arrow.gif" alt="[dbl_dots_arrow.gif]">
+<TD><P>
+<A href="#parameters"><CODE>dot_len</CODE></A>, <A
+href="#parameters"><CODE>arrow_ang</CODE></A>, <A
+href="#parameters"><CODE>arrow_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>phantom</CODE></P>
+<TD><IMG src="phantom.gif" alt="[phantom.gif]">
+<TD><CODE></CODE><TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>phantom_arrow</CODE></P>
+<TD><IMG src="phantom_arrow.gif" alt="[phantom_arrow.gif]">
+<TD><P>
+<A href="#parameters"><CODE>arrow_ang</CODE></A>, <A
+href="#parameters"><CODE>arrow_len</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>plain</CODE></P>
+<TD><IMG src="plain.gif" alt="[plain.gif]">
+<TD><CODE></CODE><TD><P>
+<CODE>vanilla</CODE></P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>plain_arrow</CODE></P>
+<TD><IMG src="plain_arrow.gif" alt="[plain_arrow.gif]">
+<TD><P>
+<A href="#parameters"><CODE>arrow_ang</CODE></A>, <A
+href="#parameters"><CODE>arrow_len</CODE></A></P>
+<TD><P>
+<CODE>electron</CODE>, <CODE>fermion</CODE>, <CODE>quark</CODE></P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_plain</CODE></P>
+<TD><IMG src="dbl_plain.gif" alt="[dbl_plain.gif]">
+<TD><CODE></CODE><TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_plain_arrow</CODE></P>
+<TD><IMG src="dbl_plain_arrow.gif" alt="[dbl_plain_arrow.gif]">
+<TD><P>
+<A href="#parameters"><CODE>arrow_ang</CODE></A>, <A
+href="#parameters"><CODE>arrow_len</CODE></A></P>
+<TD><P>
+<CODE>heavy</CODE></P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>wiggly</CODE></P>
+<TD><IMG src="wiggly.gif" alt="[wiggly.gif]">
+<TD><P>
+<A href="#parameters"><CODE>wiggly_len</CODE></A>, <A
+href="#parameters"><CODE>wiggly_slope</CODE></A></P>
+<TD><P>
+<CODE>boson</CODE>, <CODE>photon</CODE></P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_wiggly</CODE></P>
+<TD><IMG src="dbl_wiggly.gif" alt="[dbl_wiggly.gif]">
+<TD><P>
+<A href="#parameters"><CODE>wiggly_len</CODE></A>, <A
+href="#parameters"><CODE>wiggly_slope</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>zigzag</CODE></P>
+<TD><IMG src="zigzag.gif" alt="[zigzag.gif]">
+<TD><P>
+<A href="#parameters"><CODE>zigzag_len</CODE></A>, <A
+href="#parameters"><CODE>zigzag_width</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+  <TR>
+<TD><P>
+<CODE>dbl_zigzag</CODE></P>
+<TD><IMG src="dbl_zigzag.gif" alt="[dbl_zigzag.gif]">
+<TD><P>
+<A href="#parameters"><CODE>zigzag_len</CODE></A>, <A
+href="#parameters"><CODE>zigzag_width</CODE></A></P>
+<TD><CODE></CODE>  </TR>
+</TABLE>
+</DIV>
+
+<DIV align=center>
+<A name="options"></A>
+<TABLE BORDER=3>
+<CAPTION align=bottom>Options for <A
+href="#fmfset"><CODE>\fmf</CODE></A></CAPTION>
+  <TR>
+<TH><P>
+Name</P>
+<TH><P>
+Argument</P>
+<TH><P>
+Default</P>
+<TH><P>
+Remarks</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>tension</CODE></P>
+<TD><P>
+positive number</P>
+<TD><P>
+1</P>
+<TD><P>
+tension of arcs</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>left</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>right</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>straight</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>label</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>label.side</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>label.dist</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>label.pos</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>tag</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>width</CODE></P>
+<TD><TD><TD>  </TR>
+  <TR>
+<TD><P>
+<CODE>foreground</CODE></P>
+<TD><P>
+color</P>
+<TD><P>
+black</P>
+<TD><P>
+MetaPost only!</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>background</CODE></P>
+<TD><P>
+color</P>
+<TD><P>
+white</P>
+<TD><P>
+MetaPost only!</P>
+  </TR>
+</TABLE>
+</DIV>
+
+<DIV align=center>
+<A name="parameters"></A>
+<TABLE BORDER=3>
+<CAPTION align=bottom>These parameters can be changed with <A
+href="#fmfset"><CODE>\fmfset</CODE></A></CAPTION>
+  <TR>
+<TH><P>
+Name</P>
+<TH><P>
+Default</P>
+<TH><P>
+Remarks</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>thin</CODE></P>
+<TD><P>
+1pt</P>
+<TD><P>
+thin arcs</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>thick</CODE></P>
+<TD><P>
+1.5<CODE>thin</CODE></P>
+<TD><P>
+thick arcs</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>arrow_len</CODE></P>
+<TD><P>
+4mm</P>
+<TD><P>
+length of arrow head</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>arrow_ang</CODE></P>
+<TD><P>
+15</P>
+<TD><P>
+opening angle of arrow head</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>curly_len</CODE></P>
+<TD><P>
+3mm</P>
+<TD><P>
+length of one curl</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dash_len</CODE></P>
+<TD><P>
+3mm</P>
+<TD><P>
+length of one dash</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dot_len</CODE></P>
+<TD><P>
+2mm</P>
+<TD><P>
+distance of two dots</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>wiggly_len</CODE></P>
+<TD><P>
+4mm</P>
+<TD><P>
+length of one wiggle</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>wiggly_slope</CODE></P>
+<TD><P>
+60</P>
+<TD><P>
+inclination of wiggles</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>zigzag_len</CODE></P>
+<TD><P>
+2mm</P>
+<TD><P>
+length of a zig-zag period</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>zigzag_width</CODE></P>
+<TD><P>
+2<CODE>thick</CODE></P>
+<TD><P>
+width of zig-zag lines</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>decor_size</CODE></P>
+<TD><P>
+5mm</P>
+<TD><P>
+default size of vertex decors</P>
+  </TR>
+  <TR>
+<TD><P>
+<CODE>dot_size</CODE></P>
+<TD><P>
+4<CODE>thick</CODE></P>
+<TD><P>
+diameter of dots</P>
+  </TR>
+</TABLE>
+</DIV>
+<H2 align=center>Force</H2>
+
+<DL>
+<DT><A
+name="fmfforce"><CODE>\fmfforce{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfshift"><CODE>\fmfshift{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmffixed"><CODE>\fmffixed{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmffixedx"><CODE>\fmffixedx{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmffixedy"><CODE>\fmffixedy{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+</DL>
+<H2 align=center>External Vertices</H2>
+
+<DL>
+<DT><A name="fmfleft"><CODE>\fmfleft{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfright"><CODE>\fmfright{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfbottom"><CODE>\fmfbottom{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmftop"><CODE>\fmftop{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfstraight"><CODE>\fmfstraight</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfleftn"><CODE>\fmfleftn{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfrightn"><CODE>\fmfrightn{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfbottomn"><CODE>\fmfbottomn{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmftopn"><CODE>\fmftopn{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfsurroundn"><CODE>\fmfsurroundn{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfsurround"><CODE>\fmfsurround{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfcurved"><CODE>\fmfcurved</CODE></A></DT>
+<DD></DD>
+</DL>
+<H2 align=center>Loops'n'Groups</H2>
+
+<DL>
+<DT><A name="fmfkeep"><CODE>\fmfkeep{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfreuse"><CODE>\fmfreuse{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmffor"><CODE>\begin{fmffor}{<VAR>#1</VAR>}{<VAR>#2</VAR>}{<VAR>#3</VAR>}{<VAR>#4</VAR>}
+<VAR>FeynMF commands</VAR> \end{fmffor}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfgroup"><CODE>\begin{fmfgroup} <VAR>FeynMF commands</VAR>
+\end{fmfgroup}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfsubgraph"><CODE>\begin{fmfsubgraph}(<VAR>#1</VAR>,<VAR>#2</VAR>)(<VAR>#3</VAR>,<VAR>#4</VAR>)
+<VAR>FeynMF commands</VAR> \end{fmfsubgraph}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfshrink"><CODE>\begin{fmfshrink}{<VAR>#1</VAR>} <VAR>FeynMF
+commands</VAR> \end{fmfshrink}</CODE></A></DT>
+<DD></DD>
+</DL>
+<H2 align=center>Immediate Mode</H2>
+
+<DL>
+<DT><A name="fmfi"><CODE>\fmfi{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD>See the <A href="#styles">table</A> below for the supported line styles.
+</DD>
+<DT><A name="fmfiv"><CODE>\fmfiv{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfipath"><CODE>\fmfipath{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfipair"><CODE>\fmfipair{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfiset"><CODE>\fmfiset{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A
+name="fmfiequ"><CODE>\fmfiequ{<VAR>#1</VAR>}{<VAR>#2</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfpfx"><CODE>\fmfpfx{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+</DL>
+<H2 align=center>Wizardry</H2>
+
+<DL>
+<DT><A name="fmfcmd"><CODE>\fmfcmd{<VAR>#1</VAR>}</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfwizard"><CODE>\fmfwizard</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfnowizard"><CODE>\fmfnowizard</CODE></A></DT>
+<DD></DD>
+</DL>
+<H2 align=center>Miscellaneous</H2>
+
+<DL>
+<DT><A name="fmfdisplay"><CODE>\fmfdisplay</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfstopdisplay"><CODE>\fmfstopdisplay</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmftrace"><CODE>\fmftrace</CODE></A></DT>
+<DD></DD>
+<DT><A name="fmfnotrace"><CODE>\fmfnotrace</CODE></A></DT>
+<DD></DD>
+</DL>
+<HR>
+<H1 align=center>Tips and Tricks</H1>
+
+<H2 align=center>Making Code Work with Older or Newer <CODE>FeynMF</CODE>
+Versions</H2>
+
+<P>
+FeynMF versions <EM>before 1.03</EM> required the use of
+<CODE>\noexpand</CODE> before certain TeX macros in labels.  Here
+<CODE>\bar</CODE> is the most notorious example.  Since version 1.03 this is
+no longer necessary.  In fact, since version 1.05 it is no longer allowed
+because the compatibility code can trigger unwanted side effects, which are
+hard to track down.</P>
+<P>
+Fortunately, it is possible to make documents portable to installations which
+are still running old versions of FeynMF by conditionally defining
+<CODE>\nxp</CODE> (any other name could be used as well)</P>
+<PRE>
+  \expandafter\ifx\csname fmfpfx\endcsname\relax
+    \let\nxp\noexpand  % version <= 1.02: halt expansion \else \let\nxp\relax % version>= 1.03: hacks not needed anymore
+  \fi
+</PRE>
+<P>
+and using it in place of <CODE>\noexpand</CODE></P>
+<PRE>
+  \fmf{plain,label=$\nxp\bar p$}{from,to}
+</PRE>
+<P>
+Usually, it is possible to process documents prepared for old versions of
+<CODE>FeynMF</CODE> by using the <CODE>pre-1.03</CODE> option:</P>
+<PRE>
+  \usepackage[pre-1.03]{feynmf}
+</PRE>
+<P>
+But as mentioned above, this <EM>can</EM> interfere with the
+<CODE>LaTeX</CODE> font loading on demand code and should be used with
+care.</P>
+<HR>
+<ADDRESS>
+This WEB page comes to you from <A href="/~ohl/">Thorsten Ohl</A>.</ADDRESS>
+</BODY>
+<!--
+  Local Variables:
+  mode:sgml
+  eval:(sgml-parse-prolog)
+  End:
+ -->
+</HTML>

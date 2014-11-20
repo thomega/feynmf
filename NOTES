@@ -1,0 +1,77 @@
+% NOTES -- News for feynmf
+% $Header$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% TADPOLES:
+%
+% Place a tadpole of style |style| and diameter |diam| at vertex
+% |vpos|, rotated by |ang| from the default orientation which is
+% determined from the arc connecting |vpos| with |vref|.
+%    \begin{macrocode}
+vardef vtadpole (expr style) (suffix vpos, vref) (expr diam, ang) =
+  save npos, nref, detour, a;
+  numeric npos, nref, detour, a;
+  npos := vlookup vpos;
+  nref := vlookup vref;
+  if known vlist[npos]loc:
+    if known vlist[nref]loc:
+%    \end{macrocode}
+% Found an arc from |npos| to |nref|:
+%    \begin{macrocode}
+      a := tangential_angle (npos, nref, 0, 0);
+      if not (known a):
+%    \end{macrocode}
+% Found an arc from |nref| to |npos|:
+%    \begin{macrocode}
+        a := tangential_angle (nref, npos, infinity, 180);
+        if not (known a):
+%    \end{macrocode}
+% Found no arc connecting |npos| with |nref|, use straight line:
+%    \begin{macrocode}
+          a := angle (vlist[nref]loc - vlist[npos]loc);
+        fi
+      fi
+    else:
+%    \end{macrocode}
+% Can't find |nref|, use |right| direction:
+%    \begin{macrocode}
+      a := 180;
+    fi
+    scantokens ("draw_" & style) (fullcircle
+				    scaled diam
+				    shifted (-diam/2,0)
+				    rotated (a + ang)
+				    shifted vlist[npos]loc);
+  else:
+    errhelp "feynmf: ???";
+    errmessage "feynmf: vertex `" & str vpos & "' not known.";
+  fi
+enddef;
+%    \end{macrocode}
+% Find the angle of the tangent to the arc connecting the vertex
+% number |nfrom| with |nto| and position |pos| (only |0| and
+% |infinity| are reasonable arguments) plus |offset|.
+%    \begin{macrocode}
+vardef tangential_angle (expr nfrom, nto, pos, offset) =
+  save n, a;
+  numeric n, a;
+  for n = varcs (nfrom):
+    if vlist[nfrom]arc[n] = nto:
+      if known vlist[nfrom]arc[n]lsr:
+        a := angle direction pos
+               of vbuild_arc (vlist[nfrom]arc[n]lsr,
+		              vlist[nfrom]loc,
+			      vlist[nto]loc) + offset;
+      fi
+    fi
+  endfor
+  a
+enddef;
+%    \end{macrocode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Local Variables:
+mode:LaTeX
+fill-prefix:"% "
+indent-tabs-mode:nil
+page-delimiter:"^% %%%%%%%%%*\n"
+End:

@@ -1,0 +1,653 @@
+% permute.mf -- permuting external vertices in FeynMF
+% $Id: permute.mf 163 1996-02-20 00:10:19Z ohl $
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is a proof of concept for picking the optimal permutation of
+% external vertices. Unfortunately it is too hungry for string memory
+% and too slow for practical use.  2 -> 5 processes seem to be the
+% upper limit -- and that's not worth the effort (i.e. supporting the
+% addition failure modes).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Permuting lists:
+
+% A pool of lists (or strings), indexed in small increments to keep
+% indiced below 4095:
+
+numeric qstep;
+qstep = 0.001;
+
+def qupto =
+  step qstep until
+enddef;
+
+vardef qinit@# (text list) =
+  string qstring@#[]; numeric qstring@#$;
+  numeric qlist@#$, qlist@#[]$, qlist@#[][];
+  qstring@#$ := 0;
+  qlist@#$ := 0;
+  forsuffixes s = list:
+    qstring@#$ := qstring@#$ + qstep;
+    qstring@#[qstring@#$] := str s;
+  endfor
+  qlist@#$ := qlist@#$ + 1;
+  for i = qstep qupto qstring@#$:
+    qlist@#[qlist@#$][i] = i;
+  endfor
+  qlist@#[qlist@#$]$ := qstring@#$;
+  qlist@#$
+enddef;
+
+% Allocate a new list and return a pointer to it.
+vardef qnew@# =
+  qlist@#$ := qlist@#$ + qstep;
+  qlist@#[qlist@#$]$ := 0;
+  qlist@#$
+enddef;
+
+vardef qimplode@# (expr l) =
+  save s; string s;
+  s := "";
+  for i = qstep qupto qlist@#[l]$:
+    if s <> "":
+      s := s & ",";
+    fi
+    s := s & qstring@#[qlist@#[l][i]];
+  endfor
+  s
+enddef;
+
+vardef qprint@# (expr l) =
+  message "qprint (" & decimal l & ") -> " & (qimplode@# (l));
+enddef;
+
+vardef qcount@# (expr l) =
+  qlist@#[l]$/qstep
+enddef;
+
+vardef qhead@# (expr l) =
+  save q; numeric q;
+  q = qnew@#;
+  qlist@#[q][qstep] := qlist@#[l][qstep];
+  qlist@#[q]$ := qstep;
+  q
+enddef;
+  
+vardef qtail@# (expr l) =
+  save q; numeric q;
+  q = qnew@#;
+  qlist@#[q]$ := qlist@#[l]$ - qstep;
+  for i = 2qstep qupto qlist@#[l]$:
+    qlist@#[q][i-qstep] := qlist@#[l][i];
+  endfor
+  q
+enddef;
+
+vardef qconcat@# (expr h, t) =
+  save q; numeric q;
+  q = qnew@#;
+  qlist@#[q]$ := qlist@#[h]$ + qlist@#[t]$ ;
+  for i = qstep qupto qlist@#[h]$:
+    qlist@#[q][i] := qlist@#[h][i];
+  endfor
+  for i = qstep qupto qlist@#[t]$:
+    qlist@#[q][qlist@#[h]$+i] := qlist@#[t][i];
+  endfor
+  q
+enddef;
+
+vardef qcyclic@# (expr l) =
+  qconcat@# (qtail@# (l), qhead@# (l))
+enddef;
+
+% Permutation lists:
+
+% Initialize the permutation list memory.
+vardef pinit =
+  numeric plist$, plist[][], plist[]$;
+  plist$ := 0;
+enddef;
+
+% Allocate a new list and return a pointer to it.
+vardef pnew =
+  plist$ := plist$ + 1;
+  plist[plist$]$ := 0;
+  plist$
+enddef;
+
+% Copy a list to a freshly allocated one and return a pointer to it.
+vardef pcopy (expr old) =
+  save new; numeric new;
+  new := pnew;
+  plist[new]$ := plist[old]$;
+  for i = 1 upto plist[old]$:
+    plist[new][i] := plist[old][i];
+  endfor
+  new
+enddef;
+
+% Append a list to an existing one.
+vardef pappend (expr a, b) =
+  for i = 1 upto plist[b]$:
+    plist[a][plist[a]$ + i] := plist[b][i];
+  endfor
+  plist[a]$ := plist[a]$ + plist[b]$;
+enddef;
+
+% Copy the concatenation of two lists to a freshly allocated one
+% and return a pointer to it.
+vardef pconcat (expr a, b) =
+  new ab; numeric ab;
+  ab := pcopy (a);
+  pappend (ab, b);
+  ab
+enddef;
+
+% Prepend a string to each member of a feshly allocated copy of
+% a list of strings and return a pointer to it.
+vardef pmap@# (expr h, l) =
+  save p; numeric p;
+  p = pnew;
+  plist[p]$ := plist[l]$;
+  for i = 1 upto plist[l]$:
+    plist[p][i] := qconcat@# (h, plist[l][i]);
+  endfor
+  p
+enddef;
+
+% Return a pointer to the freshly allocated list of all _cyclic_
+% permutations of a comma separated list of suffixes (encoded
+% in strings).
+vardef cpermute@# (expr l) =
+  save p; numeric p;
+  p = pnew;
+  plist[p]$ := qcount@# (l);
+  plist[p][1] := l;
+  for i = 2 upto plist[p]$:
+    plist[p][i] := qcyclic@# (plist[p][i-1]);
+  endfor
+  p
+enddef;
+
+% Return a pointer to the memberwise concatenations of the head
+% with the permutations of the tail.
+vardef permute_@# (expr l) =
+  pmap@# (qhead@# (l), permute@# (qtail@# (l)))
+enddef;
+
+% Return a pointer to the freshly allocated list of _all_
+% permutations of a comma separated list of suffixes (encoded
+% in strings).
+vardef permute@# (expr l) =
+  if (qcount@# (l)) <= 2:
+    cpermute@# (l)
+  else:
+    save c, p; numeric c, p;
+    c = cpermute@# (l);
+    p = pnew;
+    for i = 1 upto plist[c]$:
+      pappend (p, permute_@# (plist[c][i]));
+    endfor
+    p
+  fi
+enddef;
+
+% Print a list.
+vardef pprint@# (expr p) =
+  message "pprint (" & decimal p & ") ->";
+  for i = 1 upto plist[p]$:
+    show (qimplode@# (plist[p][i]));
+  endfor
+  message "end";
+enddef;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% TESTS:
+% 
+% numeric l, l.a, l.b, p.a, p.b;
+% 
+% pinit;
+% l = qinit (u,v,w);
+% 
+% show (qcount (l));
+% show (qcount (qtail (l)));
+% show (qimplode (qhead (l)));
+% show (qimplode (qtail (l)));
+% show (qimplode (qtail (qtail (l))));
+% show (qimplode (qcyclic (l)));
+% show (qimplode (qcyclic (qtail (l))));
+% show (qimplode (qhead (qcyclic (qtail (l)))));
+% show (qimplode (qtail (qcyclic (qtail (l)))));
+% 
+% pinit;
+% l.a = qinit.a (ua,va,wa);
+% l.b = qinit.b (ub,vb,wb);
+% l.c = qinit.c (uc,vc,wc);
+% p.a = permute.a (l.a);
+% p.b = permute.b (l.b);
+% p.c = permute.c (l.c);
+% 
+% pprint.a (p.a);
+% pprint.b (p.b);
+% pprint.c (p.c);
+% 
+% pinit; pprint (permute (qinit (u1)));
+% pinit; pprint (permute (qinit (u1,u2)));
+% pinit; pprint (permute (qinit (u1,u2,u3)));
+% pinit; pprint (permute (qinit (u1,u2,u3,u4)));
+% pinit; pprint (permute (qinit (u1,u2,u3,u4,u5)));
+% % pinit; pprint (permute (qinit (u1,u2,u3,u4,u5,u6)));
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Alternative implementation (in a somewhat earlier stage), faster
+%%% but even more greedy for strings:
+% 
+% vardef combine_ (text t) =
+%   save s; string s;
+%   s := "";
+%   forsuffixes $ = t:
+%     if s <> "":
+%       s := s & ",";
+%     fi
+%     s := s & str $;
+%   endfor
+%   s
+% enddef;
+% 
+% vardef count_ (text t) =
+%   0 + forsuffixes $ = t: +1 endfor
+% enddef;
+% 
+% vardef head_ (suffix h) (text t) =
+%   (str h)
+% enddef;
+%   
+% vardef tail_ (suffix h) (text t) =
+%   combine_ (t)
+% enddef;
+% 
+% vardef cyclic_ (text t) =
+%   tail_ (t) & "," & head_ (t)
+% enddef;
+% 
+% vardef cons (expr h, t) =
+%   h & "," & t
+% enddef;
+% 
+% vardef count expr l = count_ (scantokens l) enddef;
+% vardef head expr l = head_ (scantokens l) enddef;
+% vardef tail expr l = tail_ (scantokens l) enddef;
+% vardef cyclic expr l = cyclic_ (scantokens l) enddef;
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % The following works, but runs out of strings
+% % with lists of more than 5 members (6 in case of Metapost) ..
+% % Garbage collection might help, but how to implement it efficiently?
+% % A more efficient combine_ could also help.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% % Initialize the permutation list memory.
+% vardef pinit =
+%   string plist[][];
+%   numeric plist.last, plist[]last;
+%   plist.last := 0;
+% enddef;
+% 
+% % Allocate a new list and return a pointer to it.
+% vardef pnew =
+%   plist.last := plist.last + 1;
+%   plist[plist.last]last := 0;
+%   plist.last
+% enddef;
+% 
+% % Copy a list to a freshly allocated one and return a pointer to it.
+% vardef pcopy expr old =
+%   save new; numeric new;
+%   new := pnew;
+%   plist[new]last := plist[old]last;
+%   for i = 1 upto plist[old]last:
+%     plist[new][i] := plist[old][i];
+%   endfor
+%   new
+% enddef;
+% 
+% % Append a list to an existing one.
+% vardef pappend (expr a, b) =
+%   for i = 1 upto plist[b]last:
+%     plist[a][plist[a]last + i] := plist[b][i];
+%   endfor
+%   plist[a]last := plist[a]last + plist[b]last;
+% enddef;
+% 
+% % Copy the concatenation of two lists to a freshly allocated one
+% % and return a pointer to it.
+% vardef pconcat (expr a, b) =
+%   new ab; numeric ab;
+%   ab := pcopy (a);
+%   pappend (ab, b);
+%   ab
+% enddef;
+% 
+% % Prepend a string to each member of a feshly allocated copy of
+% % a list of strings and return a pointer to it.
+% vardef pmap (expr h, l) =
+%   save p; numeric p;
+%   p = pnew;
+%   plist[p]last := plist[l]last;
+%   for i = 1 upto plist[l]last:
+%     plist[p][i] := cons (h, plist[l][i]);
+%   endfor
+%   p
+% enddef;
+% 
+% % Return a pointer to the freshly allocated list of all _cyclic_
+% % permutations of a comma separated list of suffixes (encoded
+% % in strings).
+% vardef cpermute expr l =
+%   save p; numeric p;
+%   p = pnew;
+%   plist[p]last := count (l);
+%   plist[p][1] := l;
+%   for i = 2 upto plist[p]last:
+%     plist[p][i] := cyclic (plist[p][i-1]);
+%   endfor
+%   p
+% enddef;
+% 
+% % Return a pointer to the memberwise concatenations of the head
+% % with the permutations of the tail.
+% vardef permute_ (suffix h) (text t) =
+%   pmap (str h, permute (combine_ (t)))
+% enddef;
+% 
+% % Return a pointer to the freshly allocated list of _all_
+% % permutations of a comma separated list of suffixes (encoded
+% % in strings).
+% vardef permute expr l =
+%   if (count l) <= 2:
+%     cpermute l
+%   else:
+%     save c, p; numeric c, p;
+%     c = cpermute l;
+%     p = pnew;
+%     for i = 1 upto plist[c]last:
+%       pappend (p, permute_ (scantokens plist[c][i]));
+%     endfor
+%     p
+%   fi
+% enddef;
+% 
+% % Print a list.
+% vardef pprint expr p =
+%   message "pprint (" & decimal p & ") ->";
+%   for i = 1 upto plist[p]last:
+%     show plist[p][i];
+%   endfor
+%   message "end";
+% enddef;
+% 
+% pinit;
+% 
+% string l, l[];
+% l =  "u,v,w";
+% l1 =  "u1";
+% l2 =  "u1,u2";
+% l3 =  "u1,u2,u3";
+% l4 =  "u1,u2,u3,u4";
+% l5 =  "u1,u2,u3,u4,u5";
+% 
+% show (count l);
+% show (count (tail l));
+% show (head l);
+% show (tail l);
+% show (tail (tail l));
+% show (cyclic l);
+% show (cyclic (tail l));
+% show (head (cyclic (tail l)));
+% show (tail (cyclic (tail l)));
+% 
+% for i = 1 upto 5:
+%   pinit;
+%   pprint (permute l[i]);
+% endfor
+% 
+% tracingstats:=1;
+% end.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copying vertices and scanning permutations:
+
+def vxertices suffix @ =
+  @.first upto @.last
+enddef;
+
+def vxarcs (suffix @) (text i) =
+  @[i]arc.first upto @[i]arc.last
+enddef;
+
+def vxconstr (suffix @) (text i) =
+  @[i]constr.first upto @[i]constr.last
+enddef;
+
+vardef vname suffix v =
+  save s; string s[];
+  s0 = str v;
+  s1 = substring (0,2) of s0;
+  s2 = substring (2,infinity) of s0;
+  if (s1 <> "__") or (s2 = ""):
+    errhelp "feynmf: vertex names must start with `__'.";
+    errmessage "feynmf: illegal vertext name: `" & s0 & "'.";
+    "illegal_vertex_name"
+  else:
+    s2
+  fi
+enddef;
+
+def vxinit suffix @ =
+  save vhash;
+  numeric @.first, @.last;
+  @.first := 1;
+  @.last := 0;
+  pair @[]loc;
+  numeric @[]decor.size, @[]decor.ang,
+    @[]arc.first, @[]arc.last,
+    @[]arc[], @[]arc[]lsr,
+    @[]arc[]tns, @[]arc[]lbl.dist,
+    @[]arc[]tag, @[]arc[]wd,
+    @[]constr.first, @[]constr.last,
+    @[]constr[], lambdax[][], lambday[][];
+  string @[]name, @[]lbl, @[]decor.sty,
+    @[]arc[]sty, @[]arc[]lbl, @[]arc[]lbl.side;
+  numeric @[]lbl.ang;
+  path @[]decor.shape;
+enddef;
+
+vardef venter suffix v =
+  if not vexists v:
+    vlist.last := vlist.last + 1;
+    vhash.v := vlist.last;
+    vlist[vhash.v]name := vname v;
+    vlist[vhash.v]loc := (whatever,whatever);
+    vlist[vhash.v]arc.first := 1;
+    vlist[vhash.v]arc.last := 0;
+    vlist[vhash.v]constr.first := 1;
+    vlist[vhash.v]constr.last := 0;
+    vlist[vhash.v]lbl := "";
+    vlist[vhash.v]lbl.ang := whatever;
+    vlist[vhash.v]lbl.dist := 3thick;
+  fi
+enddef;
+
+vardef vxdump suffix @ =
+  message ">>>>> Vertices and arcs (" & str @ & ") for diagram #" & decimal charcode
+        & " of " & jobname & ".mf:";
+  for i = vxertices @:
+    message "> " & @[i]name & "=" & decimal_pair (@[i]loc)
+          & ": #lines="
+          & decimal (@[i]arc.last - @[i]arc.first + 1)
+          if @[i]lbl <> "":
+            & ", lbl=" & @[i]lbl
+            & ", l.angle=" & decimal_ (@[i]lbl.ang)
+            & ", l.dist=" & decimal_ (@[i]lbl.dist)
+          fi
+          & ".";
+  endfor
+  for i = vxertices@:
+    for j = vxarcs (@,i):
+      if known @[i]arc[j]sty:
+        message "> " & @[i]name & "*" & @[@[i]arc[j]]name
+                & ": " & @[i]arc[j]sty
+                & ", tns=" & decimal_ (@[i]arc[j]tns)
+                & ", lsr=" & decimal_ (@[i]arc[j]lsr)
+                & ", wd=" & decimal_ (@[i]arc[j]wd)
+                if @[i]arc[j]lbl <> "":
+                  & ", lbl=" & @[i]arc[j]lbl
+                  & ", l.side=" & @[i]arc[j]lbl.side
+                  & ", l.dist=" & decimal_ (@[i]arc[j]lbl.dist)
+                fi
+                & ".";
+      fi
+    endfor
+    for j = vxconstr (@,i):
+      if i < @[i]constr[j]:
+        save z;
+        pair z;
+        z = @[@[i]constr[j]]loc - @[i]loc;
+        message "> " & @[i]name & "&"
+                & @[@[i]constr[j]]name
+                & ": " & decimal_pair (z);
+      fi
+    endfor;
+  endfor
+enddef;
+
+vardef vxcopy (suffix from, to) =
+  vxinit to;
+  to.first := from.first;
+  to.last := from.last;
+  for i = vxertices from:
+    to[i]loc := if known from[i]loc: from[i]loc else: (whatever,whatever) fi;
+    forsuffixes @ = name, lbl, arc.first, arc.last, constr.first, constr.last,
+                    decor.shape, decor.size, decor.sty, decor.ang:
+      to[i]@ := from[i]@;
+    endfor
+    for j = vxarcs (from, i):
+      to[i]arc[j] := from[i]arc[j];
+      forsuffixes @ = sty, tns, lbl, lbl.side, lbl.dist:
+        to[i]arc[j]@ := from[i]arc[j]@;
+      endfor
+    endfor
+    for j = vxconstr (from, i):
+      to[i]constr[j] := from[i]constr[j];
+    endfor
+    for j = vxertices from:
+      clearxy;
+      z1 = from[i]loc - from[j]loc;
+      z2 = to[i]loc - to[j]loc;
+      if known x1 and not (known x2):
+        xpart (to[i]loc - to[j]loc) = x1;
+      fi
+      if known y1 and not (known y2):
+        ypart (to[i]loc - to[j]loc) = y1;
+      fi
+    endfor
+  endfor
+enddef;
+
+vardef lambda (suffix @) (expr i, j) =
+  (if known (xpart(@[i]loc - @[j]loc)):
+     lambdax[i][j]
+   else:
+     0
+   fi,
+   if known (ypart(@[i]loc - @[j]loc)):
+     lambday[i][j]
+   else:
+     0
+   fi)
+enddef;
+
+vardef vxfreeze suffix @ =
+  for i = vxertices @:
+    if unknown @[i]loc:
+      origin = origin
+      for j = vxarcs (@, i):
+        + @[i]arc[j]tns * (@[i]loc - @[@[i]arc[j]]loc)
+      endfor
+      for j = vxconstr (@, i):
+        if i < @[i]constr[j]:
+          + lambda (@, i, @[i]constr[j])
+        elseif i > @[i]constr[j]:
+          - lambda (@, @[i]constr[j], i)
+        fi
+      endfor;
+    fi
+  endfor
+  if vtracing: vxdump @; fi
+enddef;
+
+vardef vxlength suffix @ =
+  (for i = vxertices @:
+     for j = vxarcs (@, i):
+       + 0.0001 * @[i]arc[j]tns * abs (@[i]loc - @[@[i]arc[j]]loc)
+                                * abs (@[i]loc - @[@[i]arc[j]]loc)
+     endfor
+   endfor)
+enddef;
+
+
+vardef vxxfreeze suffix @ =
+  save this, best;
+  forsuffixes $ = t, b, l, r, s:
+    numeric permutations$;
+    string this.perm$, best.perm$;
+  endfor
+  numeric this.len, best.len;
+  pinit;
+  permutations.r = permute.r (qinit.r (__o1,__o2,__o3,__o4,__o5));
+  permutations.l = permute.l (qinit.l (__i1,__i2));
+  vxcopy (@, vback);
+  for i = 1 upto plist[permutations.r]$:
+    this.perm.r := qimplode.r (plist[permutations.r][i]);
+    for j = 1 upto plist[permutations.l]$:
+      this.perm.l := qimplode.l (plist[permutations.l][j]);
+      message "vxlength (" & this.perm.l & "//" & this.perm.r & ")";
+      vxcopy (vback, @);
+      expandafter vright (scantokens this.perm.r);
+      expandafter vleft (scantokens this.perm.l);
+      vxfreeze @;
+      this.len := vxlength @;
+      message "vxlength (" & this.perm.l & "//" & this.perm.r & ") -> " & decimal this.len;
+      if (unknown best.len):
+    	best.perm.r := this.perm.r;
+    	best.perm.l := this.perm.l;
+    	best.len := this.len;
+      elseif (this.len < best.len):
+    	best.perm.r := this.perm.r;
+    	best.perm.l := this.perm.l;
+    	best.len := this.len;
+      fi
+    endfor
+  endfor
+  vxcopy (vback, @);
+  expandafter vright (scantokens best.perm.r);
+  vxfreeze @;
+enddef;
+
+def vinit = vxinit vlist enddef;
+def vdump = vxdump vlist enddef;
+def vfreeze = vxfreeze vlist enddef;
+def vfreeze = vxxfreeze vlist enddef;
+
+endinput;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Local Variables:
+mode:indented-text
+indent-tabs-mode:nil
+End:

@@ -1,0 +1,295 @@
+Tue Jun  3 23:49:27 1997  Thorsten Ohl  <ohl@tholix.home.de>
+
+	* feynmf.sty: \AtBeginFeynMF{<commands>} for executing commands at
+	every \begin{fmffile}.
+
+Sun Apr 20 16:45:56 1997  Thorsten Ohl  <ohl@tholix.home.de>
+
+	* feynmf.mf: make polygons etc. `primary' [suggested by wk]
+
+Sat Jan 25 17:59:36 1997  Thorsten Ohl  <ohl@tholix.home.de>
+
+	* feynmf.mf: arrows=->-, arrows=-><-, a la PStricks
+
+Sun May 21 04:26:21 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.mf: label placement for arcs: if straight line,
+	use same algorithm as for vertices.
+
+Sun Jun 11 22:17:02 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: do the vertex shapes right, using tricks
+	from Volume E.
+
+	* feynmf.dtx: improve halftoning.
+
+Tue Jun  6 10:27:44 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.sty: find a way to avoid writing the character
+	twice to the MF file in amstex math environments (harmless).
+
+Sun May 21 13:22:48 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.mf: since we're using cutdraw for double lines,
+	dbl_wiggly, etc. won't be joined as smoothly as before.
+
+Wed Jun  7 21:11:57 1995  Thorsten Ohl  <ohl@localhost>
+
+	* have a look at Alan Jeffrey's arrow macros (in the
+	diagramf package) or at similar constructs in Volume E.
+
+	* feynmf.sty: use the width and height of label boxes to
+	enlarge the box of the diagram.
+
+	* feynmf.dtx: pass the width of labels from TeX to MF,
+	then the latter can do fancy things based on this information!
+	This will only be suppted by \fmflabel{} and not by the
+	label=... options.   Introduce \fmflabelv, \fmfilabel, fmfilabelv.
+
+Thu May 18 11:20:18 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: \fmfboxthem{width}{v1,v2,...} and
+	\fmfboxonly{width}{v1,v2,...} just like the `advanced' example in
+	the paper.  (Also \fmfboxthemn and \fmfboxonlyn, of course).
+
+        * feynmf.dtx: save a graph data structure without
+	locations such that subgraphs can be reused.
+
+Tue May  9 20:30:38 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.mf: cosmetics: `... wiggled ...' such that
+	`p wiggled (wiggle_len, wiggle_slope)' is identical to `wiggly p'.
+	The same for `... curled ...'. This should blend nicely with mf.
+
+Mon May 22 22:17:46 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: implement more decorations for arcs by
+	faking identical arcs with tension 0.
+
+Mon May  8 21:35:17 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.sty: verify that \fmfkeep and \fmfreuse don't mess up the
+	counters.
+
+Thu May  4 21:06:11 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmp.sty: `readonly' option  for distributing papers.
+
+Thu May  4 11:58:26 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.sty (\fmfcmd): check for unbalanced quotes (and other
+	critical glyphs, maybe)!
+
+Mon May 01 03:32:09 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: equivalent of syle_def for vertices.
+
+Wed Apr 26 09:42:07 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: distribute multiple tadpoles among gaps,  this will
+	also take care of situations where there are more tadpoles than
+	gaps. [QUESTIONABLE]
+
+Thu Feb 23 20:57:52 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx (Jochen Biebel): support small arrows as labels to
+	indicate momentum flow for uncharged particles.
+
+Wed Feb 22 21:09:54 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx (Jochen Biebel): check for overlapping ranges
+	in fmfchar codes resulting from \includeonly{}
+
+Wed May 25 19:24:42 1994  Thorsten Ohl  (ohl@localhost)
+
+	* Try to find a way to implement a ``arc_1 is parallel to arc_2''
+	constraint, which would be useful for (pseudo) bound state
+	diagrams.
+
+########################################################################
+
+Tue Feb 21 00:36:17 1995  Thorsten Ohl  <ohl@localhost>
+
+	* [Implemented 1.06] hidden line removal (aka: `rubout' style).
+
+Tue May  7 01:42:39 1996  Thorsten Ohl  <ohl@tholix1.home.de>
+
+	* [Implemented 1.06] feynmf.mf: Detect zero length arcs and give a
+	more meaningful error message.
+
+Sun Feb 18 21:00:37 1996  Thorsten Ohl  <ohl@tholix1.home.de>
+
+	* [Implemented 1.04] feynmf.mf: support
+ 	\fmffixed{(0,whatever)}(foo,bar) by having separate lambdax and
+	lambday in fmffreeze.
+	
+Tue Feb 21 00:36:17 1995  Thorsten Ohl  <ohl@localhost>
+
+	* [Implemented 1.04] generalization of \fmffixed: \fmffixedx,
+	\fmffixedy. 
+
+Thu Jan  4 22:05:41 1996  Thorsten Ohl  <ohl@tholix1.home.de>
+
+	* [Implemented 1.03] feynmf.dtx: Use the
+ 	\toks={#1}\write{\the\toks} trick to make the \noexpand's
+ 	unnecessary.
+
+Thu Jun  8 11:44:58 1995  Thorsten Ohl  <ohl@localhost>
+
+	* [Implemented 1.01] feynmf.mf: shades of gray (using stipples).
+
+Sun May 28 05:20:53 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.mf: ivertex should accept a list of vertices,
+	idraw should maybe also accept a list of vertices.
+        ...  NOT!   It is useful that vertices can contain commata
+	(e.g. .5[x1,x2]), this would be spoiled.
+
+Mon Jun  5 01:40:00 1995  Thorsten Ohl  <ohl@localhost>
+
+	* [FIXED in 1.01] feynmf.dtx: fix the little shadow at the end of
+	double lines, caused by rounding after using cutdraw.
+	Use `interim autorounding := 0;'.
+
+	* [FOXED in 1.01] feynmf.dtx: drawing crosses:
+	    vardef polycross expr n =
+	      save i;
+	      for i = 1 upto n:
+		origin -- dir (360(i-.5)/n) --
+	      endfor
+	      cycle
+	    enddef;
+	tricross, tetracross, pentacross, ...
+        
+Thu May  4 11:58:26 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.mf (LaTeX): check for strings that are to long to fit on
+	one line! [NOT NECESSARY]
+
+	* feynmf.dtx: check if we can remove the filename from the `grep'
+	tag! [DONE]
+
+Sun Apr 30 23:32:09 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: \fmfstyle macros that expands to style_def. [DONE]
+
+Fri Apr 28 15:48:30 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: support `width' option in \fmf. [DONE]
+
+Thu Apr 27 03:28:22 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: redo example layout using shorter lines and marginal
+	notes (and/or other floats) instead of the ugly minipages. [DONE]
+
+Tue Apr 11 09:52:42 1995  Thorsten Ohl  <ohl@localhost>
+
+	* implement `vpath' as a companion to `vloc', which will return
+	the path connecting to vertices (if this has been allocated with
+	phantom, it can now be drawn in very fancy ways).  Be sure to
+	support pairs of vertices which are multiply connected (implement
+	at `tag' option for diambiguation: \fmf{phantom,tag=foo}{}). [DONE]
+
+Tue Feb 21 00:36:17 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: straight galleries. [DONE]
+
+	* feynmf.dtx: TAPOLES! [DONE.]
+
+	* cutoff ends for the dbl_... line styles. [DONE]
+
+	* document allowed identifiers. [FIXED]
+
+	* `center' option for labels. [DONE]
+
+	* fix/document units for label.dist. [DONE]
+
+Mon Feb 20 02:49:01 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: remove some code duplication in the immediate mode
+	commands. [FIXED PARTIALLY]
+
+Sun Feb 19 14:12:48 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: \fmfkeep and \fmfreuse, dealing with fmfchar
+	vs. fmfchar* and with multiple fmffiles! [DONE]
+
+Sun Jan  8 03:01:39 1995  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: Wolfgang: add color and filling support for
+	MetaPost. [DONE]
+
+Sun Dec 18 23:58:05 1994  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: Wolfgang: add another wiggle style: /\/\/\/\/\/\/\
+        [DONE]
+
+Tue Dec 13 10:47:58 1994  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: use Lagrange multipliers to implement simple
+	constraints like `vloc v1 = vloc v2 + delta'.  [PROTOTYPED, should
+	be generalized]
+
+Tue Oct 25 21:26:04 1994  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: I think I habe identified the string memory leak:
+	getopt creates far to many strings.  They can not be recovered,
+	because some options are stored in the graph before vconnect
+	returns.  (MetaPost can do string compaction, which helps a _lot_
+	here.)  [FIXED]
+
+Sun Oct 23 03:17:58 1994  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: In addition to hatching and shading, implement
+	warped decorations. [will not be implemented]
+
+Sun Oct 23 03:17:58 1994  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: really do something about the string memory leak.
+	This is no longer an MS-DOG problem: we're almost up to the
+	standard web2c limit with our examples in the documentation.
+	(Note that MetaPost seems to be much less greedy!)  [FIXED]
+
+Sat Oct 22 19:06:09 1994  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: Finally implement generalized decorations.
+	[FIXED for vertices]
+	[will not be implemented for arcs, use style_def instead!]
+
+Fri Oct 21 10:47:36 1994  Thorsten Ohl  <ohl@localhost>
+
+	* feynmf.dtx: the new arrow code fails for exactly horizontal and
+	vertical lines. [FIXED (the failure was for too short lines though)]
+
+Wed Sep 21 20:01:27 1994  Thorsten Ohl  <ohl@localhost>
+
+	* be more conservative w/ string space, small mf's will be
+	grateful.  [FIXED]
+
+Fri May 27 01:09:30 1994  Thorsten Ohl  (ohl@localhost)
+
+	* feynmf.dtx: move all higher level abstractions from the LaTeX
+	code to the Metafont code (i.e. each LaTeX macros should create a
+	call to one and only one Metafont macro). [OK]
+
+        * feynmf.dtx (mp): handle the blobs by replacing the cullit
+	depending code. [FIXED]
+
+Thu May 26 23:13:34 1994  Thorsten Ohl  (ohl@localhost)
+
+	* feynmf.dtx (mp): fix the handling of bounding boxes in the
+	MetaPost version.  (a)  handle overshooting (which is natural for
+	characters but bad for EPS files), (b) force MetaPost to generate
+	a bounding box as large as we want/need!  [FIXED (was trivial with
+	the setbounds operator)]
+
+	* feynmf.dtx (mp): use `writefile' to write the labels directly,
+	make detour over the log file obsolete. [FIXED]
+
+Sun May 15 22:36:11 1994  Thorsten Ohl  (ohl@linux)
+
+	* \fileversion can conflict with other packages. [FIXED]
+
+# Local Variables:
+# mode:change-log
+# End:
